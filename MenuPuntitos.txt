@@ -1,0 +1,173 @@
+Nombre original proyecto: MenuPuntitosZamudio
+
+activity_main_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="30dp"
+    android:layout_marginHorizontal="30dp"
+    tools:context=".MainActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ingresa el primer valor"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/valorcito1"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ingresa el segundo valor"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/valorcito2"/>
+
+</LinearLayout>
+
+menu_layout  ( dentro de carpeta menú )
+
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sumita"
+        android:title="suma"
+        android:icon="@drawable/sumar"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/restita"
+        android:title="resta"
+        android:icon="@drawable/restar"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/multiplicadita"
+        android:title="multiplicacion"
+        android:icon="@drawable/multiplicar"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/partidita"
+        android:title="division"
+        android:icon="@drawable/dividir"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/Sumita"
+        android:title="Suma"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/Restita"
+        android:title="Resta"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/Multiplica"
+        android:title="Multiplica"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/Divide"
+        android:title="Divide"
+        app:showAsAction="ifRoom"/>
+</menu>
+
+MainActivity_class
+
+package com.example.menupuntitoszamudio;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class MainActivity extends AppCompatActivity {
+    EditText textito1,textito2;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menusito,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        textito1 = findViewById(R.id.valorcito1);
+        textito2 = findViewById(R.id.valorcito2);
+        Clasesita objetito = new Clasesita();
+        objetito.setTextito1(Integer.parseInt(textito1.getText().toString()));
+        objetito.setTextito2(Integer.parseInt(textito2.getText().toString()));
+        if(item.getItemId()==R.id.sumita||item.getItemId()==R.id.Sumita){
+            Toast.makeText(this, "El resultado de la suma es: " + objetito.suma(), Toast.LENGTH_LONG).show();
+        }
+        else
+            if(item.getItemId()==R.id.restita||item.getItemId()==R.id.Restita){
+                Toast.makeText(this, "El resultado de la resta es: " + objetito.resta(), Toast.LENGTH_LONG).show();
+            }
+            else
+                if(item.getItemId()==R.id.multiplicadita||item.getItemId()==R.id.Multiplica){
+                    Toast.makeText(this, "El resultado de la multiplicacion es: " + objetito.multiplicacion(), Toast.LENGTH_LONG).show();
+                }
+                else
+                    if(item.getItemId()==R.id.partidita||item.getItemId()==R.id.Divide){
+                        Toast.makeText(this, "El resultado de la division es: " + objetito.division(), Toast.LENGTH_LONG).show();
+                    }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+    }
+}
+
+Clasesita_class
+
+package com.example.menupuntitoszamudio;
+
+public class Clasesita {
+    public int textito1;
+    public int textito2;
+
+    public int getTextito1() {
+        return textito1;
+    }
+
+    public void setTextito1(int textito1) {
+        this.textito1 = textito1;
+    }
+
+    public int getTextito2() {
+        return textito2;
+    }
+
+    public void setTextito2(int textito2) {
+        this.textito2 = textito2;
+    }
+    public int suma(){
+        return textito1 + textito2;
+    }
+    public int resta(){
+        return textito1 - textito2;
+    }
+    public int multiplicacion(){
+        return textito1 * textito2;
+    }
+    public int division(){
+        return textito1 / textito2;
+    }
+}

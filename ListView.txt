@@ -1,0 +1,156 @@
+Nombre original proyecto: kikesito
+activity_main_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_margin="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/visititas"/>
+
+
+
+
+
+</LinearLayout>
+
+
+basurita_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageicon"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview"
+            android:textSize="20dp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:id="@+id/textview2"
+            android:textSize="20dp"
+            android:gravity="center"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+MainActivity_class
+
+package com.example.kikesito;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    String deportescometa [] = {"uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez"};
+    String deporteslista [] = {"depo1","depo2","depo3","depo4","depo5","depo6","depo7","depo8","depo9","depo10"};
+    int deporteimagenes[] = {R.drawable.img_1,R.drawable.img_2,R.drawable.img_3,R.drawable.img_4,
+            R.drawable.img_5,R.drawable.img_6,R.drawable.img_7,R.drawable.img_8,R.drawable.img_9,R.drawable.img_10};
+    ListView listView;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        listView = findViewById(R.id.visititas);
+        listView.setOnItemClickListener(this);
+
+        Adaptador adaptadorcito = new Adaptador(getApplicationContext(),deportescometa,deporteslista,deporteimagenes);
+        listView.setAdapter(adaptadorcito);
+    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, String.valueOf(position),Toast.LENGTH_LONG).show();
+    }
+}
+
+Adaptador_class
+
+package com.example.kikesito;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adaptador extends BaseAdapter {
+    Context contexto;
+    String listadeportes[];
+    String listacomentar[];
+    int    listaimagenes[];
+    LayoutInflater inflater;
+
+    public Adaptador(Context contexto, String[] listadeportes, String[] listacomentar, int[] listaimagenes) {
+        this.contexto = contexto;
+        this.listadeportes = listadeportes;
+        this.listacomentar = listacomentar;
+        this.listaimagenes = listaimagenes;
+        this.inflater = LayoutInflater.from(contexto);
+    }
+
+
+
+
+    @Override
+    public int getCount() {
+        return listacomentar.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = inflater.inflate(R.layout.basurita,null);
+        TextView textView = convertView.findViewById(R.id.textview);
+        TextView textView2 = convertView.findViewById(R.id.textview2);
+        ImageView deporteimg = convertView.findViewById(R.id.imageicon);
+
+        textView.setText(listadeportes[position]);
+        textView2.setText(listacomentar[position]);
+        deporteimg.setImageResource(listaimagenes[position]);
+
+        return convertView;
+    }
+}

@@ -1,0 +1,165 @@
+activity_main_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/contenedorHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"/>
+</HorizontalScrollView>
+
+basurita_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:layout_marginEnd="12dp"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/imagencita"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textito1"
+        android:layout_marginTop="10dp"
+        android:textSize="10sp"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textito2"
+        android:layout_marginTop="10dp"
+        android:textSize="10sp"
+        android:gravity="center"/>
+</LinearLayout>
+
+
+MainActivity_class
+
+package com.example.listviewhorizontal;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+    String deportescomenta[] = {"uno", "dos", "tres", "cuatro", "cinco", "seis",
+            "siete", "ocho", "nueve", "diez"};
+
+    String deporteslista[] = {"depo1", "depo2", "depo3", "depo4", "depo5", "depo6",
+            "depo7", "depo8", "depo9", "depo10"};
+
+    int deporimagenes[] = {R.drawable.img_1, R.drawable.img_2, R.drawable.img_3,
+            R.drawable.img_4, R.drawable.img_5, R.drawable.img_6, R.drawable.img_7,
+            R.drawable.img_8, R.drawable.img_9, R.drawable.img_10};
+
+    LinearLayout contenedorHorizontal;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        contenedorHorizontal = findViewById(R.id.contenedorHorizontal);
+
+        Adaptador adaptadito = new Adaptador(getApplicationContext(), deporteslista,
+                deportescomenta, deporimagenes, getLayoutInflater());
+        for(int i=0; i<adaptadito.getCount(); i++){
+            View vistaItem = adaptadito.getView(i, null, contenedorHorizontal);
+            final int posicion = i;
+            vistaItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(MainActivity.this, String.valueOf(posicion), Toast.LENGTH_SHORT).show();
+                }
+            });
+            contenedorHorizontal.addView(vistaItem);
+        }
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+}
+
+Adaptador_class
+
+package com.example.listviewhorizontal;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class Adaptador extends BaseAdapter {
+    Context context;
+    String listadeportes[];
+    String listacomentar[];
+    int listaimagenes[];
+    LayoutInflater inflater;
+
+    public Adaptador(Context context, String[] listadeportes,
+                     String[] listacomentar, int[] listaimagenes, LayoutInflater inflater) {
+        this.context = context;
+        this.listadeportes = listadeportes;
+        this.listacomentar = listacomentar;
+        this.listaimagenes = listaimagenes;
+        this.inflater = inflater;
+    }
+
+    @Override
+    public int getCount() {
+        return listacomentar.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        convertView = inflater.inflate(R.layout.basurita, null);
+        TextView textito1 = convertView.findViewById(R.id.textito1);
+        TextView textito2 = convertView.findViewById(R.id.textito2);
+        ImageView deporImage = convertView.findViewById(R.id.imagencita);
+        textito1.setText(listadeportes[position]);
+        textito2.setText(listacomentar[position]);
+        deporImage.setImageResource((listaimagenes[position]));
+
+        return convertView;
+    }
+}
