@@ -1,0 +1,244 @@
+nombre original del proyecto: TareaPuntacho1
+
+activity_main_layout
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="30dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textito1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido a ahorcadito"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/buscadita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:id="@+id/ahorcadito"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:id="@+id/adivinadita"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="Escribe una letra"
+        android:inputType="textCapCharacters"
+        android:maxLength="1"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/boton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mostrar"
+        android:textSize="24sp" />
+
+</LinearLayout>
+
+MainActivity_class
+
+package com.example.tareapuntacho1;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    TextView vistita, buscadito;
+    EditText adivinadita;
+    Button botoncito;
+    ImageView ahorcadito;
+
+    String cadenitas[] = {"ximena", "pablito", "juan", "sixseven"
+    };
+
+    int sorteadito = 0;
+    String cadena = "", cadaux = "", cadena3 = "";
+
+    int errores = 0;
+    char caracU = ' ';
+    int repeticiones = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        vistita = findViewById(R.id.textito1);
+        buscadito = findViewById(R.id.buscadita);
+        adivinadita = findViewById(R.id.adivinadita);
+        botoncito = findViewById(R.id.boton);
+        ahorcadito = findViewById(R.id.ahorcadito);
+
+        botoncito.setOnClickListener(this);
+
+        inicio();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+            String entrada = adivinadita.getText().toString().trim().toUpperCase();
+
+            if (entrada.length() != 1) {
+                Toast.makeText(this,
+                        "Escribe una sola letra",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            caracU = entrada.charAt(0);
+            for (int i = 0; i < cadena3.length(); i++) {
+                if (cadena3.charAt(i) == caracU) {
+                    Toast.makeText(this,
+                            "Ya utilizaste esa letra",
+                            Toast.LENGTH_SHORT).show();
+                    adivinadita.setText("");
+                    return;
+                }
+            }
+            cadena3 += caracU;
+            repeticiones = 0;
+            for (int i = 0; i < cadena.length(); i++) {
+                if (cadena.charAt(i) == caracU) {
+                    repeticiones++;
+                }
+            }
+
+            if (repeticiones > 0) {
+                String nuevaCadena = "";
+
+                for (int i = 0; i < cadena.length(); i++) {
+                    if (cadena.charAt(i) == caracU) {
+                        nuevaCadena += caracU;
+                    } else {
+                        nuevaCadena += cadaux.charAt(i);
+                    }
+                }
+
+                cadaux = nuevaCadena;
+
+                Toast.makeText(this,
+                        "Correcto",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+
+                errores++;
+
+                Toast.makeText(this,
+                        "Letra incorrecta",
+                        Toast.LENGTH_SHORT).show();
+            }
+            reemplazar();
+            imagenAhorcado();
+            adivinadita.setText("");
+
+            boolean gano = true;
+
+            for (int i = 0; i < cadaux.length(); i++) {
+                if (cadaux.charAt(i) == '-') {
+                    gano = false;
+                }
+            }
+
+            if (gano) {
+                vistita.setText("¡Ganaste! La palabra era " + cadena);
+                terminarJuego();
+
+            } else if (errores == 6) {
+                vistita.setText("¡Perdiste! La palabra era " + cadena);
+                terminarJuego();
+
+            } else {
+                vistita.setText("Errores: " + errores + " de 6");
+            }
+
+    }
+
+    public void inicio() {
+
+        sorteadito = (int) (Math.random() * cadenitas.length);
+        cadena = cadenitas[sorteadito].toUpperCase();
+        cadaux = "";
+        cadena3 = "";
+        errores = 0;
+        repeticiones = 0;
+        caracU = ' ';
+        for (int i = 0; i < cadena.length(); i++) {
+            cadaux += "-";
+        }
+        reemplazar();
+
+        ahorcadito.setImageResource(R.drawable.ahorcadito0);
+
+        adivinadita.setText("");
+        adivinadita.setEnabled(true);
+        botoncito.setEnabled(true);
+        botoncito.setText("Mostrar");
+    }
+    public void reemplazar() {
+        String mostrar = "";
+
+        for (int i = 0; i < cadaux.length(); i++) {
+            mostrar += cadaux.charAt(i) + " ";
+        }
+
+        buscadito.setText(mostrar);
+    }
+
+    public void imagenAhorcado() {
+        switch (errores) {
+            case 0:
+                ahorcadito.setImageResource(R.drawable.ahorcadito0);
+                break;
+            case 1:
+                ahorcadito.setImageResource(R.drawable.ahorcadito1);
+                break;
+            case 2:
+                ahorcadito.setImageResource(R.drawable.ahorcadito2);
+                break;
+            case 3:
+                ahorcadito.setImageResource(R.drawable.ahorcadito3);
+                break;
+            case 4:
+                ahorcadito.setImageResource(R.drawable.ahorcadito4);
+                break;
+            case 5:
+                ahorcadito.setImageResource(R.drawable.ahorcadito5);
+                break;
+            case 6:
+                ahorcadito.setImageResource(R.drawable.ahorcadito6);
+                break;
+        }
+    }
+    public void terminarJuego() {
+        adivinadita.setEnabled(false);
+        botoncito.setEnabled(false);
+        buscadito.setText("");
+        buscadito.setText(cadena);
+    }
+}
